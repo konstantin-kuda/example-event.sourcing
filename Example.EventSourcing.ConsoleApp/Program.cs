@@ -1,3 +1,13 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using Cocona;
+using Microsoft.Extensions.Logging;
 
-Console.WriteLine("Hello, World!");
+var builder = CoconaApp.CreateBuilder();
+builder.Logging.AddDebug();
+
+var app = builder.Build();
+app.AddCommand((ILogger<Program> logger) =>
+{
+    logger.LogInformation("Hello World!");
+});
+
+app.Run();
