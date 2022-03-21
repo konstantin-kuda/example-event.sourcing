@@ -20,6 +20,11 @@ public class WarehouseProduct
 
     public void ShipProduct(int quantity)
     {
+        if (quantity <= 0)
+        {
+            throw new ArgumentException(nameof(quantity));
+        }
+        
         if (_currentState.Quantity < quantity)
         {
             throw new InvalidDomainException($"Not enough product(s) to ship. Sku: {Sku}");
@@ -32,6 +37,11 @@ public class WarehouseProduct
 
     public void ReceiveProduct(int quantity)
     {
+        if (quantity <= 0)
+        {
+            throw new ArgumentException(nameof(quantity));
+        }
+        
         AddEvent(
             new ProductReceivedProductEvent(Sku, quantity, DateTime.UtcNow)    
         );
@@ -39,6 +49,11 @@ public class WarehouseProduct
     
     public void AdjustInventory(int quantity, string reason)
     {
+        if (quantity <= 0)
+        {
+            throw new ArgumentException(nameof(quantity));
+        }
+        
         AddEvent(
             new InventoryAdjustedProductEvent(Sku, quantity, DateTime.UtcNow, reason)
         );
