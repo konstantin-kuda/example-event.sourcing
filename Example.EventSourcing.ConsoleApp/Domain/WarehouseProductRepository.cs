@@ -25,4 +25,24 @@ public class WarehouseProductRepository
 
         return warehouseProduct;
     }
+
+    public void Save(WarehouseProduct product)
+    {
+        List<IProductEvent> productEvents;
+        if (_inMemoryStreams.ContainsKey(product.Sku))
+        {
+            productEvents = _inMemoryStreams[product.Sku];
+        }
+        else
+        {
+            productEvents = new List<IProductEvent>();
+            _inMemoryStreams[product.Sku] = productEvents;
+        }
+
+        
+        productEvents.AddRange(
+            product.GetUncommitedEvents()    
+        );
+        product.CommitEvents();
+    }
 }
