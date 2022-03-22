@@ -1,4 +1,4 @@
-﻿namespace Example.EventSourcing.ConsoleApp.Domain.Exceptions;
+﻿namespace Example.EventSourcing.Domain.Exceptions;
 
 public class InvalidDomainException : Exception
 {

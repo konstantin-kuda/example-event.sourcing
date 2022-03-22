@@ -1,7 +1,8 @@
 ﻿using Cocona;
-using Example.EventSourcing.ConsoleApp.Domain;
+using Example.EventSourcing.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 var builder = CoconaApp.CreateBuilder();
 builder.Logging.AddDebug();
@@ -43,6 +44,27 @@ app.AddCommand("getQuantity", async ([Option] string sku, WarehouseProductReposi
 {
     var product = await repository.GetAsync(sku, ctx.CancellationToken);
     logger.LogInformation("Product Sku: {0}. Current quantity: {1}", product.Sku, product.GetQuantity());
+});
+
+
+app.AddCommand("getEvents", async ([Option] string sku, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
+{
+    var events = await repository.GetEventsAsync(sku, ctx.CancellationToken);
+    if (events != null)
+    {
+        logger.LogInformation("Events of product Sku: {0}: ", sku);
+        
+        var jsonOptions = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
+        foreach (var @event in events)
+        {
+            var json = JsonConvert.SerializeObject(@event, jsonOptions);
+            logger.LogInformation("{0}: {1}", @event.GetType().FullName, json);
+        }
+    }
+    else
+    {
+        logger.LogInformation("Product Sku: {0}. No events", sku);
+    }
 });
 
 

@@ -1,7 +1,7 @@
-﻿using Example.EventSourcing.ConsoleApp.Domain.Abstractions;
+﻿using Example.EventSourcing.Domain.Abstractions;
 using Newtonsoft.Json;
 
-namespace Example.EventSourcing.ConsoleApp.Domain;
+namespace Example.EventSourcing.Domain;
 
 public class WarehouseProductRepository
 {
@@ -32,6 +32,25 @@ public class WarehouseProductRepository
         var jsonOptions = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
         var json = JsonConvert.SerializeObject(allEvents, jsonOptions);
         await File.WriteAllTextAsync(_filePath, json, cancellationToken);
+    }
+    
+    public async Task<IEnumerable<IProductEvent>?> GetEventsAsync(string sku, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrWhiteSpace(sku))
+        {
+            throw new ArgumentException(nameof(sku));
+        }
+        
+        var warehouseProduct = new WarehouseProduct(sku);
+
+        var allEvents = await GetAllEventsAsync(cancellationToken);
+
+        if (allEvents.ContainsKey(sku))
+        {
+            return allEvents[sku];
+        }
+
+        return null;
     }
 
     public async Task<WarehouseProduct> GetAsync(string sku, CancellationToken cancellationToken)

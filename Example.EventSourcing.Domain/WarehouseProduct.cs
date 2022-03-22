@@ -1,8 +1,8 @@
-﻿using Example.EventSourcing.ConsoleApp.Domain.Abstractions;
-using Example.EventSourcing.ConsoleApp.Domain.Events;
-using Example.EventSourcing.ConsoleApp.Domain.Exceptions;
+﻿using Example.EventSourcing.Domain.Abstractions;
+using Example.EventSourcing.Domain.Events;
+using Example.EventSourcing.Domain.Exceptions;
 
-namespace Example.EventSourcing.ConsoleApp.Domain;
+namespace Example.EventSourcing.Domain;
 
 public class WarehouseProduct
 {

@@ -1,5 +1,5 @@
-﻿using Example.EventSourcing.ConsoleApp.Domain.Abstractions;
+﻿using Example.EventSourcing.Domain.Abstractions;
 
-namespace Example.EventSourcing.ConsoleApp.Domain.Events;
+namespace Example.EventSourcing.Domain.Events;
 
 public record InventoryAdjustedProductEvent(string Sku, int Quantity, DateTime DateTime, string Reason) : IProductEvent;

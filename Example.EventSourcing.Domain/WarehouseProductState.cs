@@ -1,4 +1,4 @@
-﻿namespace Example.EventSourcing.ConsoleApp.Domain;
+﻿namespace Example.EventSourcing.Domain;
 
 public class WarehouseProductState
 {
