@@ -1,8 +1,9 @@
 ﻿using Cocona;
-using Example.EventSourcing.Domain;
+using Example.EventSourcing.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+
 
 var builder = CoconaApp.CreateBuilder();
 builder.Logging.AddDebug();
@@ -19,7 +20,6 @@ app.AddCommand("ship", async ([Option] string sku, [Option] int quantity, Wareho
     logger.LogInformation("Product Sku: {0}. Shipped {1} item(s). Current quantity: {2}", product.Sku, quantity, product.GetQuantity());
 });
 
-
 app.AddCommand("receive", async ([Option] string sku, [Option] int quantity, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
 {
     var product = await repository.GetAsync(sku, ctx.CancellationToken);
@@ -28,7 +28,6 @@ app.AddCommand("receive", async ([Option] string sku, [Option] int quantity, War
     
     logger.LogInformation("Product Sku: {0}. Recieved {1} item(s). Current quantity: {2}", product.Sku, quantity, product.GetQuantity());
 });
-
 
 app.AddCommand("setQuantity", async ([Option] string sku, [Option] int quantity, [Option] string reason, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
 {
@@ -39,13 +38,11 @@ app.AddCommand("setQuantity", async ([Option] string sku, [Option] int quantity,
     logger.LogInformation("Product Sku: {0}. Adjusted quantity to {1} item(s). Current quantity: {2}", product.Sku, quantity, product.GetQuantity());
 });
 
-
 app.AddCommand("getQuantity", async ([Option] string sku, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
 {
     var product = await repository.GetAsync(sku, ctx.CancellationToken);
     logger.LogInformation("Product Sku: {0}. Current quantity: {1}", product.Sku, product.GetQuantity());
 });
-
 
 app.AddCommand("getEvents", async ([Option] string sku, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
 {
@@ -66,6 +63,5 @@ app.AddCommand("getEvents", async ([Option] string sku, WarehouseProductReposito
         logger.LogInformation("Product Sku: {0}. No events", sku);
     }
 });
-
 
 app.Run();

@@ -1,7 +1,8 @@
-﻿using Example.EventSourcing.Domain.Abstractions;
+﻿using Example.EventSourcing.Domain;
+using Example.EventSourcing.Domain.Abstractions;
 using Newtonsoft.Json;
 
-namespace Example.EventSourcing.Domain;
+namespace Example.EventSourcing.Application;
 
 public class WarehouseProductRepository
 {
