@@ -13,7 +13,7 @@ public class WarehouseProductRepository
         _filePath = Path.Combine(AppContext.BaseDirectory, "DB.WarehouseProduct.json");
     }
 
-    private async Task<Dictionary<string, List<IProductEvent>>> GetAllEventsAsync(CancellationToken cancellationToken)
+    private async Task<Dictionary<string, List<IProductEvent>>?> GetAllEventsAsync(CancellationToken cancellationToken)
     {
         if (File.Exists(_filePath))
         {
@@ -28,7 +28,7 @@ public class WarehouseProductRepository
         return new Dictionary<string, List<IProductEvent>>();
     }
 
-    private async Task SaveAllEventsAsync(Dictionary<string, List<IProductEvent>> allEvents, CancellationToken cancellationToken)
+    private async Task SaveAllEventsAsync(Dictionary<string, List<IProductEvent>>? allEvents, CancellationToken cancellationToken)
     {
         var jsonOptions = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
         var json = JsonConvert.SerializeObject(allEvents, jsonOptions);
@@ -42,11 +42,9 @@ public class WarehouseProductRepository
             throw new ArgumentException(nameof(sku));
         }
         
-        var warehouseProduct = new WarehouseProduct(sku);
-
         var allEvents = await GetAllEventsAsync(cancellationToken);
 
-        if (allEvents.ContainsKey(sku))
+        if (allEvents != null && allEvents.ContainsKey(sku))
         {
             return allEvents[sku];
         }
@@ -65,7 +63,7 @@ public class WarehouseProductRepository
 
         var allEvents = await GetAllEventsAsync(cancellationToken);
 
-        if (allEvents.ContainsKey(sku))
+        if (allEvents != null && allEvents.ContainsKey(sku))
         {
             foreach (var productEvent in allEvents[sku])
             {
@@ -78,7 +76,7 @@ public class WarehouseProductRepository
 
     public async Task SaveAsync(WarehouseProduct product, CancellationToken cancellationToken)
     {
-        var allEvents = await GetAllEventsAsync(cancellationToken);
+        var allEvents = await GetAllEventsAsync(cancellationToken) ?? new Dictionary<string, List<IProductEvent>>();
         
         List<IProductEvent> productEvents;
         if (allEvents.ContainsKey(product.Sku))

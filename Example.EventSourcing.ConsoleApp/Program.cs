@@ -17,7 +17,7 @@ app.AddCommand("ship", async ([Option] string sku, [Option] int quantity, Wareho
     product.ShipProduct(quantity);
     await repository.SaveAsync(product, ctx.CancellationToken);
     
-    logger.LogInformation("Product Sku: {0}. Shipped {1} item(s). Current quantity: {2}", product.Sku, quantity, product.GetQuantity());
+    logger.LogInformation("Product Sku: {Sku}. Shipped {Quantity} item(s). Current quantity: {CurrentQuantity}", product.Sku, quantity, product.GetQuantity());
 });
 
 app.AddCommand("receive", async ([Option] string sku, [Option] int quantity, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
@@ -26,7 +26,7 @@ app.AddCommand("receive", async ([Option] string sku, [Option] int quantity, War
     product.ReceiveProduct(quantity);
     await repository.SaveAsync(product, ctx.CancellationToken);
     
-    logger.LogInformation("Product Sku: {0}. Recieved {1} item(s). Current quantity: {2}", product.Sku, quantity, product.GetQuantity());
+    logger.LogInformation("Product Sku: {Sku}. Received {Quantity} item(s). Current quantity: {CurrentQuantity}", product.Sku, quantity, product.GetQuantity());
 });
 
 app.AddCommand("setQuantity", async ([Option] string sku, [Option] int quantity, [Option] string reason, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
@@ -35,13 +35,13 @@ app.AddCommand("setQuantity", async ([Option] string sku, [Option] int quantity,
     product.AdjustInventory(quantity, reason);
     await repository.SaveAsync(product, ctx.CancellationToken);
     
-    logger.LogInformation("Product Sku: {0}. Adjusted quantity to {1} item(s). Current quantity: {2}", product.Sku, quantity, product.GetQuantity());
+    logger.LogInformation("Product Sku: {Sku}. Adjusted quantity to {Quantity} item(s). Current quantity: {CurrentQuantity}", product.Sku, quantity, product.GetQuantity());
 });
 
 app.AddCommand("getQuantity", async ([Option] string sku, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
 {
     var product = await repository.GetAsync(sku, ctx.CancellationToken);
-    logger.LogInformation("Product Sku: {0}. Current quantity: {1}", product.Sku, product.GetQuantity());
+    logger.LogInformation("Product Sku: {Sku}. Current quantity: {CurrentQuantity}", product.Sku, product.GetQuantity());
 });
 
 app.AddCommand("getEvents", async ([Option] string sku, WarehouseProductRepository repository, ILogger<Program> logger, CoconaAppContext ctx) =>
@@ -49,18 +49,18 @@ app.AddCommand("getEvents", async ([Option] string sku, WarehouseProductReposito
     var events = await repository.GetEventsAsync(sku, ctx.CancellationToken);
     if (events != null)
     {
-        logger.LogInformation("Events of product Sku: {0}: ", sku);
+        logger.LogInformation("Events of Product Sku: {Sku}: ", sku);
         
         var jsonOptions = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto };
         foreach (var @event in events)
         {
             var json = JsonConvert.SerializeObject(@event, jsonOptions);
-            logger.LogInformation("{0}: {1}", @event.GetType().FullName, json);
+            logger.LogInformation("{ProductEventType}: {ProductEventJson}", @event.GetType().FullName, json);
         }
     }
     else
     {
-        logger.LogInformation("Product Sku: {0}. No events", sku);
+        logger.LogInformation("Product Sku: {Sku}. No events", sku);
     }
 });
 
